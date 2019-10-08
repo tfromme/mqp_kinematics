@@ -66,6 +66,17 @@ class Robot:
     def attach_link(self, *args, **kwargs):
         self.links.append(self.Link(*args, **kwargs))
 
+    def status(self):
+        while True:
+            for i, link in enumerate(self.links):
+                yield i + 1, link.angle
+
+    def set_angle(self, link_number, angle):
+        self.links[link_number - 1].go_to_angle(angle)
+
+    def get_transforms(self):
+        return [link.get_transforms for link in self.links]
+
 
 if __name__ == '__main__':
     r = Robot()
