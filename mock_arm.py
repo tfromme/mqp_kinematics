@@ -51,7 +51,7 @@ class Robot:
         def _go_to_angle_process(self, angle):
             step_size = .1 if (angle > self._angle.value) else -.1
             while abs(self._angle.value - angle) >= .05:
-                self._angle.value += .1
+                self._angle.value += step_size
                 sleep(.00308641975)
 
         def go_to_angle(self, angle):
@@ -60,17 +60,26 @@ class Robot:
             self._angle_process = Process(target=self._go_to_angle_process, args=(angle,))
             self._angle_process.start()
 
+        def get_transforms(self):
+            return self.start_to_joint, self.joint_to_end
+
     def attach_link(self, *args, **kwargs):
         self.links.append(self.Link(*args, **kwargs))
 
 
-r = Robot()
-r.attach_link(10, 10)
-link = r.links[0]
+if __name__ == '__main__':
+    r = Robot()
+    r.attach_link(10, 10)
+    link = r.links[0]
 
-print(time())
-link.go_to_angle(32.4)
-while link.angle < 32.4:
-#    print(link.angle)
-    sleep(.01)
-print(time())
+    start = time()
+    link.go_to_angle(90)
+    while time() - start < .5:
+        print(link.angle)
+        sleep(.01)
+    print('shift')
+    link.go_to_angle(-30)
+    while abs(link.angle + 30) > .1:
+        print(link.angle)
+        sleep(.01)
+    print(time() - start)
