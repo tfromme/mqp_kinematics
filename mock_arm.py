@@ -29,20 +29,18 @@ class Robot:
                 c = cos(self.attach_angle)
                 s = sin(self.attach_angle)
 
-                self.start_to_joint = [
-                    [c, -s, 0, 0],
-                    [s,  c, 0, 0],
-                    [0,  0, 1, self.length_before],
-                    [0,  0, 0, 1],
-                ]
+                self.start_to_joint = (
+                    f'[[{c}, {-s}, 0, 0], '
+                    f'[{s},  {c}, 0, 0], '
+                    f'[0,  0, 1, {self.length_before}], '
+                    '[0,  0, 0, 1]]')
 
-                # Strings will get replaced by the actual algorithm
-                self.joint_to_end = [
-                    [1,   0,    0, 0],
-                    [0, 'c', '-s', f'{-self.length_after}*s'],
-                    [0, 's',  'c', f'{self.length_after}*c'],
-                    [0,   0,    0, 1],
-                ]
+                # c and s will get replaced in sympy
+                self.joint_to_end = (
+                    '[[1, 0, 0, 0], '
+                    f'[0, c, -s, {-self.length_after}*s], '
+                    f'[0, s, c, {self.length_after}*c], '
+                    '[0, 0, 0, 1]]')
 
         @property
         def angle(self):
